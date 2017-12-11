@@ -40,6 +40,9 @@ if Code.ensure_loaded?(AMQP) do
     end
 
     def consume(%Channel{} = chan, queue, pid \\ self(), opts \\ []) do
+      # HOTFIX
+      Basic.qos(chan, prefetch_count: Application.get_env(:channels, :prefetch_count, 200))
+
       Basic.consume(chan, queue, pid, opts)
     end
 
